@@ -8,5 +8,6 @@ public enum FieldType {
 	LONG,
 	ULONG,
 	FLOAT,
-	STRING;
+	STRING,
+	VECTOR;
 }

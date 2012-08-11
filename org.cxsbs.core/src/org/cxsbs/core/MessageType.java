@@ -8,24 +8,24 @@ enum MessageContext {
 	STC, // Server to Client specific
 	CTS, // Client to Server specific
 	COM, // Common message format
-	NONE;
+	NONE;// Message with no valid context
 }
 
 public enum MessageType {
 	CONNECT(MessageContext.STC, 0, new Field[] { new StringField("name"), new StringField("pwdhash"), new IntField("playermodel") }),
 	SERVINFO(MessageContext.STC, 1, new Field[] { new IntField("clientnum"), new IntField("protocol_version"), new IntField("sessionid"), new IntField("haspwd"), new StringField("description") }),
 	WELCOME(MessageContext.STC, 2, new Field[] { new IntField("hasmap") }),
-	INITCLIENT(MessageContext.STC, 3, new Field[] { }),
-	POS(MessageContext.COM, 4, new Field[] { }),
-	TEXT(MessageContext.COM, 5, new Field[] { }),
-	SOUND(MessageContext.COM, 6, new Field[] { }),
-	CDIS(MessageContext.STC, 7, new Field[] { }),
-	SHOOT(MessageContext.STC, 8, new Field[] { }),
-	EXPLODE(MessageContext.STC, 9, new Field[] { }),
+	INITCLIENT(MessageContext.STC, 3, new Field[] { new IntField("clientnum"), new StringField("name"), new StringField("team"), new IntField("playermodel") }),
+	POS(MessageContext.COM, 4, new Field[] { }), //TODO
+	TEXT(MessageContext.COM, 5, new Field[] { new StringField("text") }),
+	SOUND(MessageContext.COM, 6, new Field[] { new IntField("sound") }),
+	CDIS(MessageContext.STC, 7, new Field[] { new IntField("clientnum") }),
+	SHOOT(MessageContext.STC, 8, new Field[] { }),//TODO
+	EXPLODE(MessageContext.STC, 9, new Field[] { }),//TODO
 	SUICIDE(MessageContext.CTS, 10, new Field[] { }),
-	DIED(MessageContext.STC, 11, new Field[] { }),
-	DAMAGE(MessageContext.STC, 12, new Field[] { }),
-	HITPUSH(MessageContext.STC, 13, new Field[] { }),
+	DIED(MessageContext.STC, 11, new Field[] { new IntField("clientnum"), new IntField("killer"), new IntField("frags") }),
+	DAMAGE(MessageContext.STC, 12, new Field[] { new IntField("clientnum"), new IntField("aggressor"), new IntField("damage"), new IntField("armour"), new IntField("health") }),
+	HITPUSH(MessageContext.STC, 13, new Field[] { new IntField("clientnum"), new IntField("gun"), new IntField("damage"), new VectorField("direction") }),
 	SHOTFX(MessageContext.STC, 14, new Field[] { }),
 	EXPLODEFX(MessageContext.STC, 15, new Field[] { }),
 	TRYSPAWN(MessageContext.CTS, 16, new Field[] { }),
