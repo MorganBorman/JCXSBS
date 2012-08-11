@@ -1,116 +1,134 @@
 package org.cxsbs.core;
 
 import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.Map;
+
+enum MessageContext {
+	STC, // Server to Client specific
+	CTS, // Client to Server specific
+	COM, // Common message format
+	NONE;
+}
 
 public enum MessageType {
-	CONNECT(0, new Field[] { }),
-	SERVINFO(1, new Field[] { }),
-	WELCOME(2, new Field[] { }),
-	INITCLIENT(3, new Field[] { }),
-	POS(4, new Field[] { }),
-	TEXT(5, new Field[] { }),
-	SOUND(6, new Field[] { }),
-	CDIS(7, new Field[] { }),
-	SHOOT(8, new Field[] { }),
-	EXPLODE(9, new Field[] { }),
-	SUICIDE(10, new Field[] { }),
-	DIED(11, new Field[] { }),
-	DAMAGE(12, new Field[] { }),
-	HITPUSH(13, new Field[] { }),
-	SHOTFX(14, new Field[] { }),
-	EXPLODEFX(15, new Field[] { }),
-	TRYSPAWN(16, new Field[] { }),
-	SPAWNSTATE(17, new Field[] { }),
-	SPAWN(18, new Field[] { }),
-	FORCEDEATH(19, new Field[] { }),
-	GUNSELECT(20, new Field[] { }),
-	TAUNT(21, new Field[] { }),
-	MAPCHANGE(22, new Field[] { }),
-	MAPVOTE(23, new Field[] { }),
-	ITEMSPAWN(24, new Field[] { }),
-	ITEMPICKUP(25, new Field[] { }),
-	ITEMACC(26, new Field[] { }),
-	TELEPORT(27, new Field[] { }),
-	JUMPPAD(28, new Field[] { }),
-	PING(29, new Field[] { }),
-	PONG(30, new Field[] { }),
-	CLIENTPING(31, new Field[] { }),
-	TIMEUP(32, new Field[] { }),
-	MAPRELOAD(33, new Field[] { }),
-	FORCEINTERMISSION(34, new Field[] { }),
-	SERVMSG(35, new Field[] { }),
-	ITEMLIST(36, new Field[] { }),
-	RESUME(37, new Field[] { }),
-	EDITMODE(38, new Field[] { }),
-	EDITENT(39, new Field[] { }),
-	EDITF(40, new Field[] { }),
-	EDITT(41, new Field[] { }),
-	EDITM(42, new Field[] { }),
-	FLIP(43, new Field[] { }),
-	COPY(44, new Field[] { }),
-	PASTE(45, new Field[] { }),
-	ROTATE(46, new Field[] { }),
-	REPLACE(47, new Field[] { }),
-	DELCUBE(48, new Field[] { }),
-	REMIP(49, new Field[] { }),
-	NEWMAP(50, new Field[] { }),
-	GETMAP(51, new Field[] { }),
-	SENDMAP(52, new Field[] { }),
-	CLIPBOARD(53, new Field[] { }),
-	EDITVAR(54, new Field[] { }),
-	MASTERMODE(55, new Field[] { }),
-	KICK(56, new Field[] { }),
-	CLEARBANS(57, new Field[] { }),
-	CURRENTMASTER(58, new Field[] { }),
-	SPECTATOR(59, new Field[] { }),
-	SETMASTER(60, new Field[] { }),
-	SETTEAM(61, new Field[] { }),
-	BASES(62, new Field[] { }),
-	BASEINFO(63, new Field[] { }),
-	BASESCORE(64, new Field[] { }),
-	REPAMMO(65, new Field[] { }),
-	BASEREGEN(66, new Field[] { }),
-	ANNOUNCE(67, new Field[] { }),
-	LISTDEMOS(68, new Field[] { }),
-	SENDDEMOLIST(69, new Field[] { }),
-	GETDEMO(70, new Field[] { }),
-	SENDDEMO(71, new Field[] { }),
-	DEMOPLAYBACK(72, new Field[] { }),
-	RECORDDEMO(73, new Field[] { }),
-	STOPDEMO(74, new Field[] { }),
-	CLEARDEMOS(75, new Field[] { }),
-	TAKEFLAG(76, new Field[] { }),
-	RETURNFLAG(77, new Field[] { }),
-	RESETFLAG(78, new Field[] { }),
-	INVISFLAG(79, new Field[] { }),
-	TRYDROPFLAG(80, new Field[] { }),
-	DROPFLAG(81, new Field[] { }),
-	SCOREFLAG(82, new Field[] { }),
-	INITFLAGS(83, new Field[] { }),
-	SAYTEAM(84, new Field[] { }),
-	CLIENT(85, new Field[] { }),
-	AUTHTRY(86, new Field[] { }),
-	AUTHCHAL(87, new Field[] { }),
-	AUTHANS(88, new Field[] { }),
-	REQAUTH(89, new Field[] { }),
-	PAUSEGAME(90, new Field[] { }),
-	ADDBOT(91, new Field[] { }),
-	DELBOT(92, new Field[] { }),
-	INITAI(93, new Field[] { }),
-	FROMAI(94, new Field[] { }),
-	BOTLIMIT(95, new Field[] { }),
-	BOTBALANCE(96, new Field[] { }),
-	MAPCRC(97, new Field[] { }),
-	CHECKMAPS(98, new Field[] { }),
-	SWITCHNAME(99, new Field[] { }),
-	SWITCHMODEL(100, new Field[] { }),
-	SWITCHTEAM(101, new Field[] { }),
-	NUMSV(102, new Field[] { });
+	CONNECT(MessageContext.STC, 0, new Field[] { new StringField("name"), new StringField("pwdhash"), new IntField("playermodel") }),
+	SERVINFO(MessageContext.STC, 1, new Field[] { new IntField("clientnum"), new IntField("protocol_version"), new IntField("sessionid"), new IntField("haspwd"), new StringField("description") }),
+	WELCOME(MessageContext.STC, 2, new Field[] { new IntField("hasmap") }),
+	INITCLIENT(MessageContext.STC, 3, new Field[] { }),
+	POS(MessageContext.COM, 4, new Field[] { }),
+	TEXT(MessageContext.COM, 5, new Field[] { }),
+	SOUND(MessageContext.COM, 6, new Field[] { }),
+	CDIS(MessageContext.STC, 7, new Field[] { }),
+	SHOOT(MessageContext.STC, 8, new Field[] { }),
+	EXPLODE(MessageContext.STC, 9, new Field[] { }),
+	SUICIDE(MessageContext.CTS, 10, new Field[] { }),
+	DIED(MessageContext.STC, 11, new Field[] { }),
+	DAMAGE(MessageContext.STC, 12, new Field[] { }),
+	HITPUSH(MessageContext.STC, 13, new Field[] { }),
+	SHOTFX(MessageContext.STC, 14, new Field[] { }),
+	EXPLODEFX(MessageContext.STC, 15, new Field[] { }),
+	TRYSPAWN(MessageContext.CTS, 16, new Field[] { }),
+	SPAWNSTATE(MessageContext.STC, 17, new Field[] { }),
+	STC_SPAWN(MessageContext.STC, 18, new Field[] { }),
+	CTS_SPAWN(MessageContext.CTS, 18, new Field[] { }),
+	FORCEDEATH(MessageContext.STC, 19, new Field[] { }),
+	GUNSELECT(MessageContext.COM, 20, new Field[] { }),
+	TAUNT(MessageContext.COM, 21, new Field[] { }),
+	MAPCHANGE(MessageContext.COM, 22, new Field[] { }),
+	MAPVOTE(MessageContext.CTS, 23, new Field[] { }),
+	ITEMSPAWN(MessageContext.STC, 24, new Field[] { }),
+	ITEMPICKUP(MessageContext.CTS, 25, new Field[] { }),
+	ITEMACC(MessageContext.STC, 26, new Field[] { }),
+	TELEPORT(MessageContext.COM, 27, new Field[] { }),
+	JUMPPAD(MessageContext.COM, 28, new Field[] { }),
+	PING(MessageContext.CTS, 29, new Field[] { }),
+	PONG(MessageContext.STC, 30, new Field[] { }),
+	CLIENTPING(MessageContext.COM, 31, new Field[] { }),
+	TIMEUP(MessageContext.STC, 32, new Field[] { }),
+	MAPRELOAD(MessageContext.STC, 33, new Field[] { }),
+	FORCEINTERMISSION(MessageContext.CTS, 34, new Field[] { }),
+	SERVMSG(MessageContext.STC, 35, new Field[] { }),
+	ITEMLIST(MessageContext.COM, 36, new Field[] { }),
+	RESUME(MessageContext.STC, 37, new Field[] { }),
+	EDITMODE(MessageContext.COM, 38, new Field[] { }),
+	EDITENT(MessageContext.COM, 39, new Field[] { }),
+	EDITF(MessageContext.COM, 40, new Field[] { }),
+	EDITT(MessageContext.COM, 41, new Field[] { }),
+	EDITM(MessageContext.COM, 42, new Field[] { }),
+	FLIP(MessageContext.COM, 43, new Field[] { }),
+	COPY(MessageContext.COM, 44, new Field[] { }),
+	PASTE(MessageContext.COM, 45, new Field[] { }),
+	ROTATE(MessageContext.COM, 46, new Field[] { }),
+	REPLACE(MessageContext.COM, 47, new Field[] { }),
+	DELCUBE(MessageContext.COM, 48, new Field[] { }),
+	REMIP(MessageContext.COM, 49, new Field[] { }),
+	NEWMAP(MessageContext.COM, 50, new Field[] { }),
+	GETMAP(MessageContext.CTS, 51, new Field[] { }),
+	SENDMAP(MessageContext.STC, 52, new Field[] { }),
+	CLIPBOARD(MessageContext.COM, 53, new Field[] { }),
+	EDITVAR(MessageContext.COM, 54, new Field[] { }),
+	MASTERMODE(MessageContext.COM, 55, new Field[] { }),
+	KICK(MessageContext.CTS, 56, new Field[] { }),
+	CLEARBANS(MessageContext.CTS, 57, new Field[] { }),
+	CURRENTMASTER(MessageContext.STC, 58, new Field[] { }),
+	SPECTATOR(MessageContext.COM, 59, new Field[] { }),
+	SETMASTER(MessageContext.CTS, 60, new Field[] { }),
+	SETTEAM(MessageContext.COM, 61, new Field[] { }),
+	CTS_BASES(MessageContext.CTS, 62, new Field[] { }),
+	STC_BASES(MessageContext.STC, 62, new Field[] { }),
+	BASEINFO(MessageContext.STC, 63, new Field[] { }),
+	BASESCORE(MessageContext.STC, 64, new Field[] { }),
+	REPAMMO(MessageContext.STC, 65, new Field[] { }),
+	BASEREGEN(MessageContext.STC, 66, new Field[] { }),
+	ANNOUNCE(MessageContext.STC, 67, new Field[] { }),
+	LISTDEMOS(MessageContext.CTS, 68, new Field[] { }),
+	SENDDEMOLIST(MessageContext.STC, 69, new Field[] { }),
+	GETDEMO(MessageContext.CTS, 70, new Field[] { }),
+	SENDDEMO(MessageContext.STC, 71, new Field[] { }),
+	DEMOPLAYBACK(MessageContext.STC, 72, new Field[] { }),
+	RECORDDEMO(MessageContext.CTS, 73, new Field[] { }),
+	STOPDEMO(MessageContext.CTS, 74, new Field[] { }),
+	CLEARDEMOS(MessageContext.CTS, 75, new Field[] { }),
+	CTS_TAKEFLAG(MessageContext.CTS, 76, new Field[] { }),
+	STC_TAKEFLAG(MessageContext.STC, 76, new Field[] { }),
+	RETURNFLAG(MessageContext.STC, 77, new Field[] { }),
+	RESETFLAG(MessageContext.STC, 78, new Field[] { }),
+	INVISFLAG(MessageContext.STC, 79, new Field[] { }),
+	TRYDROPFLAG(MessageContext.CTS, 80, new Field[] { }),
+	DROPFLAG(MessageContext.STC, 81, new Field[] { }),
+	SCOREFLAG(MessageContext.STC, 82, new Field[] { }),
+	CTS_INITFLAGS(MessageContext.CTS, 83, new Field[] { }),
+	STC_INITFLAGS(MessageContext.STC, 83, new Field[] { }),
+	SAYTEAM(MessageContext.COM, 84, new Field[] { }),
+	CLIENT(MessageContext.STC, 85, new Field[] { }),
+	AUTHTRY(MessageContext.CTS, 86, new Field[] { }),
+	AUTHCHAL(MessageContext.STC, 87, new Field[] { }),
+	AUTHANS(MessageContext.CTS, 88, new Field[] { }),
+	REQAUTH(MessageContext.STC, 89, new Field[] { }),
+	PAUSEGAME(MessageContext.COM, 90, new Field[] { }),
+	ADDBOT(MessageContext.CTS, 91, new Field[] { }),
+	DELBOT(MessageContext.CTS, 92, new Field[] { }),
+	INITAI(MessageContext.STC, 93, new Field[] { }),
+	FROMAI(MessageContext.CTS, 94, new Field[] { }),
+	BOTLIMIT(MessageContext.CTS, 95, new Field[] { }),
+	BOTBALANCE(MessageContext.CTS, 96, new Field[] { }),
+	MAPCRC(MessageContext.CTS, 97, new Field[] { }),
+	CHECKMAPS(MessageContext.CTS, 98, new Field[] { }),
+	SWITCHNAME(MessageContext.COM, 99, new Field[] { }),
+	SWITCHMODEL(MessageContext.COM, 100, new Field[] { }),
+	SWITCHTEAM(MessageContext.CTS, 101, new Field[] { }),
+	NUMSV(MessageContext.NONE, 102, new Field[] { });
 	
+	private final MessageContext context;
 	private final int id;
 	private final Field[] fields;
-		
-	private MessageType(int id, Field[] fields) {
+	
+	public static Map<Integer, MessageType> stcMessages = new HashMap<Integer, MessageType>();
+	public static Map<Integer, MessageType> ctsMessages = new HashMap<Integer, MessageType>();
+	
+	private MessageType(MessageContext context, int id, Field[] fields) {
+		this.context = context;
 		this.id = id;
 		this.fields = fields;
 	}
@@ -119,8 +137,8 @@ public enum MessageType {
 		return this.id;
 	}
 	
-	public IMessage parseMessage(ByteBuffer buffer) {
-		MessageType type = getMessageType(buffer);
+	public IMessage parseMessage(ByteBuffer buffer, MessageContext context) {
+		MessageType type = getMessageType(buffer, context);
 		
 		Message message = new Message(type);
 		
@@ -131,221 +149,39 @@ public enum MessageType {
 		return message;
 	}
 	
-	public static final MessageType getMessageType(ByteBuffer buffer) {
+	public static final MessageType getMessageType(ByteBuffer buffer, MessageContext context) {
 		int id = extractMessageType(buffer);
-		switch(id) {
-		case 0:
-			return CONNECT;
-		case 1:
-			return SERVINFO;
-		case 2:
-			return WELCOME;
-		case 3:
-			return INITCLIENT;
-		case 4:
-			return POS;
-		case 5:
-			return TEXT;
-		case 6:
-			return SOUND;
-		case 7:
-			return CDIS;
-		case 8:
-			return SHOOT;
-		case 9:
-			return EXPLODE;
-		case 10:
-			return SUICIDE;
-		case 11:
-			return DIED;
-		case 12:
-			return DAMAGE;
-		case 13:
-			return HITPUSH;
-		case 14:
-			return SHOTFX;
-		case 15:
-			return EXPLODEFX;
-		case 16:
-			return TRYSPAWN;
-		case 17:
-			return SPAWNSTATE;
-		case 18:
-			return SPAWN;
-		case 19:
-			return FORCEDEATH;
-		case 20:
-			return GUNSELECT;
-		case 21:
-			return TAUNT;
-		case 22:
-			return MAPCHANGE;
-		case 23:
-			return MAPVOTE;
-		case 24:
-			return ITEMSPAWN;
-		case 25:
-			return ITEMPICKUP;
-		case 26:
-			return ITEMACC;
-		case 27:
-			return TELEPORT;
-		case 28:
-			return JUMPPAD;
-		case 29:
-			return PING;
-		case 30:
-			return PONG;
-		case 31:
-			return CLIENTPING;
-		case 32:
-			return TIMEUP;
-		case 33:
-			return MAPRELOAD;
-		case 34:
-			return FORCEINTERMISSION;
-		case 35:
-			return SERVMSG;
-		case 36:
-			return ITEMLIST;
-		case 37:
-			return RESUME;
-		case 38:
-			return EDITMODE;
-		case 39:
-			return EDITENT;
-		case 40:
-			return EDITF;
-		case 41:
-			return EDITT;
-		case 42:
-			return EDITM;
-		case 43:
-			return FLIP;
-		case 44:
-			return COPY;
-		case 45:
-			return PASTE;
-		case 46:
-			return ROTATE;
-		case 47:
-			return REPLACE;
-		case 48:
-			return DELCUBE;
-		case 49:
-			return REMIP;
-		case 50:
-			return NEWMAP;
-		case 51:
-			return GETMAP;
-		case 52:
-			return SENDMAP;
-		case 53:
-			return CLIPBOARD;
-		case 54:
-			return EDITVAR;
-		case 55:
-			return MASTERMODE;
-		case 56:
-			return KICK;
-		case 57:
-			return CLEARBANS;
-		case 58:
-			return CURRENTMASTER;
-		case 59:
-			return SPECTATOR;
-		case 60:
-			return SETMASTER;
-		case 61:
-			return SETTEAM;
-		case 62:
-			return BASES;
-		case 63:
-			return BASEINFO;
-		case 64:
-			return BASESCORE;
-		case 65:
-			return REPAMMO;
-		case 66:
-			return BASEREGEN;
-		case 67:
-			return ANNOUNCE;
-		case 68:
-			return LISTDEMOS;
-		case 69:
-			return SENDDEMOLIST;
-		case 70:
-			return GETDEMO;
-		case 71:
-			return SENDDEMO;
-		case 72:
-			return DEMOPLAYBACK;
-		case 73:
-			return RECORDDEMO;
-		case 74:
-			return STOPDEMO;
-		case 75:
-			return CLEARDEMOS;
-		case 76:
-			return TAKEFLAG;
-		case 77:
-			return RETURNFLAG;
-		case 78:
-			return RESETFLAG;
-		case 79:
-			return INVISFLAG;
-		case 80:
-			return TRYDROPFLAG;
-		case 81:
-			return DROPFLAG;
-		case 82:
-			return SCOREFLAG;
-		case 83:
-			return INITFLAGS;
-		case 84:
-			return SAYTEAM;
-		case 85:
-			return CLIENT;
-		case 86:
-			return AUTHTRY;
-		case 87:
-			return AUTHCHAL;
-		case 88:
-			return AUTHANS;
-		case 89:
-			return REQAUTH;
-		case 90:
-			return PAUSEGAME;
-		case 91:
-			return ADDBOT;
-		case 92:
-			return DELBOT;
-		case 93:
-			return INITAI;
-		case 94:
-			return FROMAI;
-		case 95:
-			return BOTLIMIT;
-		case 96:
-			return BOTBALANCE;
-		case 97:
-			return MAPCRC;
-		case 98:
-			return CHECKMAPS;
-		case 99:
-			return SWITCHNAME;
-		case 100:
-			return SWITCHMODEL;
-		case 101:
-			return SWITCHTEAM;
-		case 102:
-			return NUMSV;
-		default:
-			throw new IllegalArgumentException("Unknown message type");
+		
+		if (context == MessageContext.CTS) {
+			if (ctsMessages.containsKey(id)) {
+				return ctsMessages.get(id);
+			} else {
+				throw new IllegalArgumentException("Unknown message type for this context");
+			}
+		} else if (context == MessageContext.STC) {
+			if (stcMessages.containsKey(id)) {
+				return stcMessages.get(id);
+			} else {
+				throw new IllegalArgumentException("Unknown message type for this context");
+			}
+		} else {
+			throw new IllegalArgumentException("Cannot get message types for this context.");
 		}
 	}
 	
 	public static final int extractMessageType(ByteBuffer buffer) {
-		return 1;
+		return CubeByteBuffer.getint(buffer, false);
 	}
+	
+    static {
+        for (MessageType messageType : MessageType.values())
+    		if(messageType.context == MessageContext.CTS) {
+    			ctsMessages.put(messageType.id, messageType);
+    		} else if (messageType.context == MessageContext.STC) {
+    			stcMessages.put(messageType.id, messageType);
+    		} else if (messageType.context == MessageContext.COM) {
+    			ctsMessages.put(messageType.id, messageType);
+    			stcMessages.put(messageType.id, messageType);
+    		}
+      }
 }

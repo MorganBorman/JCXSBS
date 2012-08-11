@@ -4,8 +4,8 @@ import java.nio.ByteBuffer;
 
 public class IntField extends Field implements IField {
 
-	public IntField(String name, FieldType type) {
-		super(name, type);
+	public IntField(String name) {
+		super(name, FieldType.INT);
 	}
 
 	@Override
