@@ -1,6 +1,5 @@
-package jcxsbs;
+package org.cxsbs.core;
 
-import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,25 +8,18 @@ import java.util.Set;
 
 public class Message implements IMessage {
 
-	private final ByteBuffer buffer;
+//	private final ByteBuffer buffer;
 	
 	private final MessageType messageType;
 	
-	private final Map<Field, FieldValue> fieldValues = new HashMap<Field, FieldValue>();
+	private final Map<Field, IFieldValue> fieldValues = new HashMap<Field, IFieldValue>();
 
-//	Fragment[] fragments = new Fragment[] { Player, Weapon, Time, Shots };
-
-	public Message(ByteBuffer buffer) {
-		this.buffer = buffer;
-		this.messageType = null;
-		decompose(buffer);
+	public Message(MessageType messageType) {
+		this.messageType = messageType;
 	}
 	
-	private IMessage decompose(ByteBuffer buffer) {
-		int offset = 0;
-		for (Field field : fields) {
-			field.parse(buffer, this);
-		}
+	public MessageType getMessageType() {
+		return messageType;
 	}
 
 	@Override
@@ -46,12 +38,12 @@ public class Message implements IMessage {
 	}
 
 	@Override
-	public Set<java.util.Map.Entry<Field, FieldValue>> entrySet() {
+	public Set<java.util.Map.Entry<Field, IFieldValue>> entrySet() {
 		return fieldValues.entrySet();
 	}
 
 	@Override
-	public FieldValue get(Object key) {
+	public IFieldValue get(Object key) {
 		return fieldValues.get(key);
 	}
 
@@ -66,17 +58,17 @@ public class Message implements IMessage {
 	}
 
 	@Override
-	public FieldValue put(Field key, FieldValue value) {
+	public IFieldValue put(Field key, IFieldValue value) {
 		return fieldValues.put(key, value);
 	}
 
 	@Override
-	public void putAll(Map<? extends Field, ? extends FieldValue> map) {
-		return fieldValues.putAll(map);
+	public void putAll(Map<? extends Field, ? extends IFieldValue> map) {
+		fieldValues.putAll(map);
 	}
 
 	@Override
-	public FieldValue remove(Object key) {
+	public IFieldValue remove(Object key) {
 		return fieldValues.remove(key);
 	}
 
@@ -86,7 +78,7 @@ public class Message implements IMessage {
 	}
 
 	@Override
-	public Collection<FieldValue> values() {
+	public Collection<IFieldValue> values() {
 		return fieldValues.values();
 	}
 
@@ -100,7 +92,7 @@ public class Message implements IMessage {
 	}
 
 	@Override
-	public FieldValue getField(String name) {
+	public IFieldValue getField(String name) {
 		for (Field field : fieldValues.keySet()) {
 			if (field.getName().equals(name)) {
 				return fieldValues.get(field);

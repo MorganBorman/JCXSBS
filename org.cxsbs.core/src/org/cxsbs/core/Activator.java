@@ -1,4 +1,4 @@
-package jcxsbs;
+package org.cxsbs.core;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;

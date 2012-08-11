@@ -1,11 +1,12 @@
-package jcxsbs;
+package org.cxsbs.core;
 
 public enum FieldType {
-	SHORT,
+	CHAR,
+	UCHAR,
 	INT,
+	UINT,
 	LONG,
+	ULONG,
 	FLOAT,
-	DOUBLE,
 	STRING;
-	
 }

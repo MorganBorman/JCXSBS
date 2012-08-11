@@ -1,4 +1,4 @@
-package jcxsbs;
+package org.cxsbs.core;
 
 public class MessageTester {
 
