@@ -23,5 +23,5 @@ public abstract class Field implements IField {
 	}
 	
 	@Override
-	public abstract void parse(ByteBuffer buffer, Message message);
+	public abstract void parse(ByteBuffer buffer, IFieldMap fieldMap);
 }

@@ -20,8 +20,8 @@ public enum MessageType {
 	TEXT(MessageContext.COM, 5, new Field[] { new StringField("text") }),
 	SOUND(MessageContext.COM, 6, new Field[] { new IntField("sound") }),
 	CDIS(MessageContext.STC, 7, new Field[] { new IntField("clientnum") }),
-	SHOOT(MessageContext.CTS, 8, new Field[] { }),//TODO
-	EXPLODE(MessageContext.CTS, 9, new Field[] { }),//TODO
+	SHOOT(MessageContext.CTS, 8, new Field[] { new IntField("shotid"), new IntField("gun"), new VectorField("from"), new VectorField("to"), new IteratedFields("hits", new Field[] { new HitField("hit") }) }),
+	EXPLODE(MessageContext.CTS, 9, new Field[] { new IntField("cmillis"), new IntField("gun"), new IntField("shotid"), new IteratedFields("hits", new Field[] { new HitField("hit") }) }),
 	SUICIDE(MessageContext.CTS, 10, new Field[] { }),
 	DIED(MessageContext.STC, 11, new Field[] { new IntField("clientnum"), new IntField("killer"), new IntField("frags") }),
 	DAMAGE(MessageContext.STC, 12, new Field[] { new IntField("clientnum"), new IntField("aggressor"), new IntField("damage"), new IntField("armour"), new IntField("health") }),

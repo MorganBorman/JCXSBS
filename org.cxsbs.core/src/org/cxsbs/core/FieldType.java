@@ -12,5 +12,6 @@ public enum FieldType {
 	VECTOR,
 	CLIENTSTATE,
 	AMMOLIST,
-	HIT;
+	HIT,
+	ITERATEDFIELDS;
 }

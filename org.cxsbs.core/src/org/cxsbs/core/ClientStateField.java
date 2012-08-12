@@ -9,7 +9,7 @@ public class ClientStateField extends Field implements IField {
 	}
 
 	@Override
-	public void parse(ByteBuffer buffer, Message message) {
+	public void parse(ByteBuffer buffer, IFieldMap fieldMap) {
 		IFieldValue fieldValue = new ClientStateFieldValue(this, 
 				CubeByteBuffer.getint(buffer, false), //lifesequence
 				CubeByteBuffer.getint(buffer, false), //health
@@ -18,7 +18,7 @@ public class ClientStateField extends Field implements IField {
 				CubeByteBuffer.getint(buffer, false), //armourtype
 				CubeByteBuffer.getint(buffer, false)  //gunselect
 				);
-		message.put(this, fieldValue);
+		fieldMap.put(this, fieldValue);
 	}
 
 }

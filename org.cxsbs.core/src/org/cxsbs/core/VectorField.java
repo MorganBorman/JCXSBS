@@ -9,10 +9,10 @@ public class VectorField extends Field implements IField {
 	}
 
 	@Override
-	public void parse(ByteBuffer buffer, Message message) {
+	public void parse(ByteBuffer buffer, IFieldMap fieldMap) {
 		Vector vector = new Vector(CubeByteBuffer.getint(buffer, false), CubeByteBuffer.getint(buffer, false), CubeByteBuffer.getint(buffer, false));
 		IFieldValue fieldValue = new VectorFieldValue(this, vector);
-		message.put(this, fieldValue);
+		fieldMap.put(this, fieldValue);
 	}
 
 }

@@ -9,9 +9,9 @@ public class StringField extends Field implements IField {
 	}
 
 	@Override
-	public void parse(ByteBuffer buffer, Message message) {
+	public void parse(ByteBuffer buffer, IFieldMap fieldMap) {
 		IFieldValue fieldValue = new StringFieldValue(this, CubeByteBuffer.getstring(buffer, false));
-		message.put(this, fieldValue);
+		fieldMap.put(this, fieldValue);
 	}
 
 }

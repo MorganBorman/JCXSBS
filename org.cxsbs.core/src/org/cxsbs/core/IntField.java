@@ -9,9 +9,9 @@ public class IntField extends Field implements IField {
 	}
 
 	@Override
-	public void parse(ByteBuffer buffer, Message message) {
+	public void parse(ByteBuffer buffer, IFieldMap fieldMap) {
 		IFieldValue fieldValue = new IntFieldValue(this, CubeByteBuffer.getint(buffer, false));
-		message.put(this, fieldValue);
+		fieldMap.put(this, fieldValue);
 	}
 
 }

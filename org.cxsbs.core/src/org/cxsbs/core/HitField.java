@@ -9,7 +9,7 @@ public class HitField extends Field implements IField {
 	}
 
 	@Override
-	public void parse(ByteBuffer buffer, Message message) {
+	public void parse(ByteBuffer buffer, IFieldMap fieldMap) {
 		IFieldValue fieldValue = new HitFieldValue(this, 
 				CubeByteBuffer.getint(buffer, false), //target
 				CubeByteBuffer.getint(buffer, false), //lifesequence
@@ -19,7 +19,7 @@ public class HitField extends Field implements IField {
 						CubeByteBuffer.getint(buffer, false), 
 						CubeByteBuffer.getint(buffer, false), 
 						CubeByteBuffer.getint(buffer, false)));
-		message.put(this, fieldValue);
+		fieldMap.put(this, fieldValue);
 	}
 
 }

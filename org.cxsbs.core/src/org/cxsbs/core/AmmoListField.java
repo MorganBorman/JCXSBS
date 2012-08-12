@@ -9,14 +9,14 @@ public class AmmoListField extends Field implements IField {
 	}
 
 	@Override
-	public void parse(ByteBuffer buffer, Message message) {
+	public void parse(ByteBuffer buffer, IFieldMap fieldMap) {
 		int[] ammo  = new int[WeaponType.NUMGUNS.ordinal()];
 		for(int i = WeaponType.SG.ordinal(); i < WeaponType.NUMGUNS.ordinal(); i++) {
 			ammo[i] = CubeByteBuffer.getint(buffer, false);
 		}
 		
 		IFieldValue fieldValue = new AmmoListFieldValue(this, ammo);
-		message.put(this, fieldValue);
+		fieldMap.put(this, fieldValue);
 	}
 
 }

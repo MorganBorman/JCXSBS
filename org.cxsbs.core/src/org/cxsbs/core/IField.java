@@ -8,6 +8,6 @@ public interface IField {
 	
 	public FieldType getType();
 	
-	public void parse(ByteBuffer buffer, Message message);
+	public void parse(ByteBuffer buffer, IFieldMap fieldMap);
 
 }

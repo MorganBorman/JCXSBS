@@ -9,9 +9,9 @@ public class UIntField extends Field implements IField {
 	}
 
 	@Override
-	public void parse(ByteBuffer buffer, Message message) {
+	public void parse(ByteBuffer buffer, IFieldMap fieldMap) {
 		IFieldValue fieldValue = new UIntFieldValue(this, CubeByteBuffer.getuint(buffer, false));
-		message.put(this, fieldValue);
+		fieldMap.put(this, fieldValue);
 	}
 
 }
