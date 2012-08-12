@@ -9,5 +9,8 @@ public enum FieldType {
 	ULONG,
 	FLOAT,
 	STRING,
-	VECTOR;
+	VECTOR,
+	CLIENTSTATE,
+	AMMOLIST,
+	HIT;
 }

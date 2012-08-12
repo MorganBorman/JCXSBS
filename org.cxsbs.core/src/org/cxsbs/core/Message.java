@@ -7,8 +7,6 @@ import java.util.Map;
 import java.util.Set;
 
 public class Message implements IMessage {
-
-//	private final ByteBuffer buffer;
 	
 	private final MessageType messageType;
 	

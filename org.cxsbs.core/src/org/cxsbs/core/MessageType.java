@@ -20,8 +20,8 @@ public enum MessageType {
 	TEXT(MessageContext.COM, 5, new Field[] { new StringField("text") }),
 	SOUND(MessageContext.COM, 6, new Field[] { new IntField("sound") }),
 	CDIS(MessageContext.STC, 7, new Field[] { new IntField("clientnum") }),
-	SHOOT(MessageContext.STC, 8, new Field[] { }),//TODO
-	EXPLODE(MessageContext.STC, 9, new Field[] { }),//TODO
+	SHOOT(MessageContext.CTS, 8, new Field[] { }),//TODO
+	EXPLODE(MessageContext.CTS, 9, new Field[] { }),//TODO
 	SUICIDE(MessageContext.CTS, 10, new Field[] { }),
 	DIED(MessageContext.STC, 11, new Field[] { new IntField("clientnum"), new IntField("killer"), new IntField("frags") }),
 	DAMAGE(MessageContext.STC, 12, new Field[] { new IntField("clientnum"), new IntField("aggressor"), new IntField("damage"), new IntField("armour"), new IntField("health") }),
@@ -29,8 +29,8 @@ public enum MessageType {
 	SHOTFX(MessageContext.STC, 14, new Field[] { new IntField("clientnum"), new IntField("gun"), new IntField("shotid"), new VectorField("from"), new VectorField("to")}),
 	EXPLODEFX(MessageContext.STC, 15, new Field[] { new IntField("clientnum"), new IntField("gun"), new IntField("shotid") }),
 	TRYSPAWN(MessageContext.CTS, 16, new Field[] { }),
-	SPAWNSTATE(MessageContext.STC, 17, new Field[] { }),//TODO: Need a AmmoListField field type
-	STC_SPAWN(MessageContext.STC, 18, new Field[] { }),//TODO: Need a ClientStateField field type
+	SPAWNSTATE(MessageContext.STC, 17, new Field[] { new IntField("clientnum"), new ClientStateField("state"), new AmmoListField("ammo") }),
+	STC_SPAWN(MessageContext.STC, 18, new Field[] { new ClientStateField("state"), new IntField("guncount"), new AmmoListField("ammo") }),
 	CTS_SPAWN(MessageContext.CTS, 18, new Field[] { new IntField("lifesequence"), new IntField("gunselect") }),
 	FORCEDEATH(MessageContext.STC, 19, new Field[] { new IntField("clientnum") }),
 	GUNSELECT(MessageContext.COM, 20, new Field[] { new IntField("gun") }),
@@ -50,8 +50,8 @@ public enum MessageType {
 	MAPRELOAD(MessageContext.STC, 33, new Field[] { }),
 	FORCEINTERMISSION(MessageContext.CTS, 34, new Field[] { }),
 	SERVMSG(MessageContext.STC, 35, new Field[] { new StringField("text") }),
-	ITEMLIST(MessageContext.COM, 36, new Field[] { }),//TODO 
-	RESUME(MessageContext.STC, 37, new Field[] { }),//TODO
+	ITEMLIST(MessageContext.COM, 36, new Field[] { }),//TODO items
+	RESUME(MessageContext.STC, 37, new Field[] { }),//TODO Need a ClientStateField field type and a way to iterate over the clients
 	EDITMODE(MessageContext.COM, 38, new Field[] { new IntField("editting") }),
 	EDITENT(MessageContext.COM, 39, new Field[] { new IntField("entid"), new VectorField("position"), new IntField("type"), new IntField("attr1"), new IntField("attr2"), new IntField("attr3"), new IntField("attr4"), new IntField("attr5") }),
 	EDITF(MessageContext.COM, 40, new Field[] { }),//TODO editing messages
@@ -105,8 +105,8 @@ public enum MessageType {
 	SAYTEAM(MessageContext.COM, 84, new Field[] { new IntField("text") }),
 	CLIENT(MessageContext.STC, 85, new Field[] { }),//TODO
 	AUTHTRY(MessageContext.CTS, 86, new Field[] { new StringField("domain"), new StringField("authname") }),
-	AUTHCHAL(MessageContext.STC, 87, new Field[] { new StringField("domain"), new UintField("authid"), new StringField("challenge") }),
-	AUTHANS(MessageContext.CTS, 88, new Field[] { new StringField("domain"), new UintField("authid"), new StringField("answerhash") }),
+	AUTHCHAL(MessageContext.STC, 87, new Field[] { new StringField("domain"), new UIntField("authid"), new StringField("challenge") }),
+	AUTHANS(MessageContext.CTS, 88, new Field[] { new StringField("domain"), new UIntField("authid"), new StringField("answerhash") }),
 	REQAUTH(MessageContext.STC, 89, new Field[] { new StringField("domain") }),
 	PAUSEGAME(MessageContext.COM, 90, new Field[] { new IntField("value") }),
 	ADDBOT(MessageContext.CTS, 91, new Field[] { }),//TODO bots
