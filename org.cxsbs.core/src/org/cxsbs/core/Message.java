@@ -1,3 +1,4 @@
+package org.cxsbs.core;
 
 public class Message extends FieldMap implements IMessage {
 

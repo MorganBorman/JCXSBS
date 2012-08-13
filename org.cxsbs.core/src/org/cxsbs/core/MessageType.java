@@ -4,19 +4,12 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-enum MessageContext {
-	STC, // Server to Client specific
-	CTS, // Client to Server specific
-	COM, // Common message format
-	NONE;// Message with no valid context
-}
-
 public enum MessageType {
 	CONNECT(MessageContext.STC, 0, new Field[] { new StringField("name"), new StringField("pwdhash"), new IntField("playermodel") }),
 	SERVINFO(MessageContext.STC, 1, new Field[] { new IntField("clientnum"), new IntField("protocol_version"), new IntField("sessionid"), new IntField("haspwd"), new StringField("description") }),
 	WELCOME(MessageContext.STC, 2, new Field[] { new IntField("hasmap") }),
 	INITCLIENT(MessageContext.STC, 3, new Field[] { new IntField("clientnum"), new StringField("name"), new StringField("team"), new IntField("playermodel") }),
-	POS(MessageContext.COM, 4, new Field[] { }), //TODO
+	POS(MessageContext.COM, 4, new Field[] { new ClientPositionField("position") }),
 	TEXT(MessageContext.COM, 5, new Field[] { new StringField("text") }),
 	SOUND(MessageContext.COM, 6, new Field[] { new IntField("sound") }),
 	CDIS(MessageContext.STC, 7, new Field[] { new IntField("clientnum") }),
@@ -50,8 +43,8 @@ public enum MessageType {
 	MAPRELOAD(MessageContext.STC, 33, new Field[] { }),
 	FORCEINTERMISSION(MessageContext.CTS, 34, new Field[] { }),
 	SERVMSG(MessageContext.STC, 35, new Field[] { new StringField("text") }),
-	ITEMLIST(MessageContext.COM, 36, new Field[] { }),//TODO items
-	RESUME(MessageContext.STC, 37, new Field[] { }),//TODO Need a ClientStateField field type and a way to iterate over the clients
+	ITEMLIST(MessageContext.COM, 36, new Field[] { new TerminatedFields("items", new Field[] { new IntField("itemid"), new IntField("itemtype") }) }),
+	RESUME(MessageContext.STC, 37, new Field[] { new TerminatedFields("items", new Field[] { new IntField("clientnum"), new IntField("cstate"), new IntField("frags"), new IntField("flags"), new IntField("quadexpiry"), new ClientStateField("state"), new AmmoListField("ammo") }) }),
 	EDITMODE(MessageContext.COM, 38, new Field[] { new IntField("editting") }),
 	EDITENT(MessageContext.COM, 39, new Field[] { new IntField("entid"), new VectorField("position"), new IntField("type"), new IntField("attr1"), new IntField("attr2"), new IntField("attr3"), new IntField("attr4"), new IntField("attr5") }),
 	EDITF(MessageContext.COM, 40, new Field[] { }),//TODO editing messages
@@ -83,7 +76,7 @@ public enum MessageType {
 	BASESCORE(MessageContext.STC, 64, new Field[] { }),//TODO capture modes
 	REPAMMO(MessageContext.STC, 65, new Field[] { }),//TODO capture modes
 	BASEREGEN(MessageContext.STC, 66, new Field[] { }),//TODO capture modes
-	ANNOUNCE(MessageContext.STC, 67, new Field[] { new IntField("type") }),
+	ANNOUNCE(MessageContext.STC, 67, new Field[] { new IntField("itemtype") }),
 	LISTDEMOS(MessageContext.CTS, 68, new Field[] { }),
 	SENDDEMOLIST(MessageContext.STC, 69, new Field[] {  }),//TODO iteration for demo list retrieval
 	GETDEMO(MessageContext.CTS, 70, new Field[] { new IntField("demonum") }),
@@ -139,12 +132,12 @@ public enum MessageType {
 		return this.id;
 	}
 	
-	public IMessage parseMessage(ByteBuffer buffer, MessageContext context) {
+	public static IMessage parseMessage(ByteBuffer buffer, MessageContext context) {
 		MessageType type = getMessageType(buffer, context);
 		
 		Message message = new Message(type);
 		
-		for(Field field :this.fields) {
+		for(Field field : type.fields) {
 			field.parse(buffer, message);
 		}
 		
