@@ -6,6 +6,8 @@ import org.osgi.framework.BundleContext;
 public class Activator implements BundleActivator {
 
 	private static BundleContext context;
+	
+	private Engine engineThread;
 
 	static BundleContext getContext() {
 		return context;
@@ -17,6 +19,8 @@ public class Activator implements BundleActivator {
 	 */
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
+		engineThread = new Engine();
+		engineThread.start();
 	}
 
 	/*
@@ -25,6 +29,7 @@ public class Activator implements BundleActivator {
 	 */
 	public void stop(BundleContext bundleContext) throws Exception {
 		Activator.context = null;
+		engineThread.shutdown();
 	}
 
 }
