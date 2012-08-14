@@ -25,14 +25,14 @@ public class CubeByteBufferTest {
 	@Test
 	public void testUInts() {
 		ByteBuffer buffer = ByteBuffer.allocate(5000);
-			int[] testInts = new int[] {0, 31, 88, 133, 255, 1007, 5000, 123456};
-			
-			for(int u : testInts) {
-				buffer.rewind();
-				CubeByteBuffer.putint(buffer, u);
-				buffer.rewind();
-				assertEquals(u, CubeByteBuffer.getint(buffer, false));
-			}
+		long[] testUInts = new long[] {0, 31, 88, 133, 255, 1007, 5000, 123456, 7233333};
+		
+		for(long u : testUInts) {
+			buffer.rewind();
+			CubeByteBuffer.putuint(buffer, u);
+			buffer.rewind();
+			assertEquals(u, CubeByteBuffer.getuint(buffer, false));
+		}
 	}
 
 }

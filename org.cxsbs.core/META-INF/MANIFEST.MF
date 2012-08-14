@@ -11,4 +11,5 @@ Bundle-ClassPath: .,
  libs/jna.jar,
  libs/jnaerator-0.11-SNAPSHOT-20120718.jar,
  libs/platform.jar
-Import-Package: org.osgi.framework
+Import-Package: org.junit;version="4.10.0",
+ org.osgi.framework

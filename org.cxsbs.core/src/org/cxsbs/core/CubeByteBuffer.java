@@ -53,24 +53,20 @@ public class CubeByteBuffer {
 	
 	public static void putuint(ByteBuffer buffer, long i) {
 		assert(i >= 0);
-		if(i < 0 || i >= (1<<21))
-		{
+		if(i < 0 || i >= (1<<21)) {
 			buffer.put((byte) (0x80 | (i & 0x7F)));
-			buffer.put((byte) (0x80 | ((i >> 7) & 0x7F)));
-			buffer.put((byte) (0x80 | ((i >> 14) & 0x7F)));
-			buffer.put((byte) (i >> 21));
-		}
-		else if(i < (1<<7)) buffer.put((byte) i);
-		else if(i < (1<<14))
-		{
+			buffer.put((byte) (0x80 | ((i >>> 7) & 0x7F)));
+			buffer.put((byte) (0x80 | ((i >>> 14) & 0x7F)));
+			buffer.put((byte) (i >>> 21));
+		} else if(i < (1<<7)) {
+			buffer.put((byte) i);
+		} else if(i < (1<<14)) {
 			buffer.put((byte) (0x80 | (i & 0x7F)));
 			buffer.put((byte) (i >> 7));
-		}
-		else 
-		{ 
+		} else {
 			buffer.put((byte) (0x80 | (i & 0x7F))); 
-			buffer.put((byte) (0x80 | ((i >> 7) & 0x7F)));
-			buffer.put((byte) (i >> 14)); 
+			buffer.put((byte) (0x80 | ((i >>> 7) & 0x7F)));
+			buffer.put((byte) (i >>> 14)); 
 		}
 	}
 	
@@ -78,19 +74,23 @@ public class CubeByteBuffer {
 		int pos = buffer.position();
 		try
 		{
-			long n = buffer.get();
-			if((n & 0x80) != 0)
-			{
-				n += (buffer.get() << 7) - 0x80;
-				if((n & (1<<14)) != 0) 
-					n += (buffer.get() << 14) - (1<<14);
-				if((n & (1<<21)) != 0) 
-					n += (buffer.get() << 21) - (1<<21);
-				if((n & (1<<28)) != 0) 
+			int n = (buffer.get() & 0xFF);
+			if((n & 0x80) != 0) {
+				n += ((buffer.get() & 0xFF) << 7) - 0x80;
+				if((n & (1<<14)) != 0) {
+					n += ((buffer.get() & 0xFF) << 14) - (1<<14);
+				}
+				if((n & (1<<21)) != 0) {
+					n += ((buffer.get() & 0xFF) << 21) - (1<<21);
+				}
+				if((n & (1<<28)) != 0) {
 					n |= -1<<28;
+				}
 			}
-			assert(n >= 0);
-			return n;
+			long l = n & 0x00000000FFFFFFFFL;
+			assert(l >= 0);
+			return l;
+			
 		}
 		finally
 		{
