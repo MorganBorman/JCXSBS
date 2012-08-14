@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum MessageType {
-	CONNECT(MessageContext.STC, 0, new Field[] { new StringField("name"), new StringField("pwdhash"), new IntField("playermodel") }),
+	CONNECT(MessageContext.CTS, 0, new Field[] { new StringField("name"), new StringField("pwdhash"), new IntField("playermodel") }),
 	SERVINFO(MessageContext.STC, 1, new Field[] { new IntField("clientnum"), new IntField("protocol_version"), new IntField("sessionid"), new IntField("haspwd"), new StringField("description") }),
 	WELCOME(MessageContext.STC, 2, new Field[] { new IntField("hasmap") }),
 	INITCLIENT(MessageContext.STC, 3, new Field[] { new IntField("clientnum"), new StringField("name"), new StringField("team"), new IntField("playermodel") }),
@@ -157,7 +157,7 @@ public enum MessageType {
 			if (stcMessages.containsKey(id)) {
 				return stcMessages.get(id);
 			} else {
-				throw new IllegalArgumentException("Unknown message type for this context");
+				throw new IllegalArgumentException("Unknown message type (" + id + ") for this context");
 			}
 		} else {
 			throw new IllegalArgumentException("Cannot get message types for this context.");

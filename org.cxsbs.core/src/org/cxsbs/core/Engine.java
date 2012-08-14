@@ -2,8 +2,6 @@ package org.cxsbs.core;
 
 import java.nio.ByteBuffer;
 
-import com.sun.jna.NativeLong;
-
 import enetwrapper.ew_Event;
 import enetwrapper.EnetWrapperLibrary;
 
@@ -43,12 +41,22 @@ public class Engine {
 			else if (event.type == EnetWrapperLibrary.ew_DATA) {
 				ByteBuffer buffer = event.getDataBuffer();
 				
-				while(buffer.position() < buffer.limit()) {
-					IMessage message = MessageType.parseMessage(buffer, MessageContext.STC);
-					System.out.println("clientid: " + event.clientid + " message: " + message.getMessageType().toString());
+				if (event.channel == 1) {
+					while(buffer.position() < buffer.limit()) {
+						IMessage message = MessageType.parseMessage(buffer, MessageContext.CTS);
+						
+						if(message.getMessageType() == MessageType.CONNECT) {
+							System.out.println("clientid: " + event.clientid + " CONNECT");
+							StringFieldValue sfv = (StringFieldValue)message.getField("name");
+							System.out.println("\tname: " + sfv.value);
+						} else if(message.getMessageType() == MessageType.PING) {
+							
+						} else {
+							System.out.println("clientid: " + event.clientid + " message: " + 
+									message.getMessageType().toString());
+						}
+					}
 				}
-				
-				//System.out.println("clientid: " + event.clientid + " data: " + event.getDataBuffer().toString());
 			}
 			else if (event.type == EnetWrapperLibrary.ew_DISCONNECT) {
 				System.out.println("clientid: " + event.clientid + " disconnected.");

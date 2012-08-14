@@ -4,6 +4,7 @@ Bundle-Name: JCXSBS
 Bundle-SymbolicName: JCXSBS
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.cxsbs.core.Activator
-Require-Bundle: org.eclipse.core.runtime
+Require-Bundle: org.eclipse.core.runtime,
+ org.junit
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
