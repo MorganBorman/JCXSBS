@@ -6,7 +6,7 @@ import com.sun.jna.Pointer;
 
 public class ENetPeer extends Structure<ENetPeer, ENetPeer.ByValue, ENetPeer.ByReference > {
 	public Pointer       dispatchList;
-	public ENetPeer      host;
+	public ENetHost      host;
 	public short         outgoingPeerID;
 	public short         incomingPeerID;
 	public int           connectID;
@@ -14,7 +14,7 @@ public class ENetPeer extends Structure<ENetPeer, ENetPeer.ByValue, ENetPeer.ByR
 	public byte          incomingSessionID;
 	public ENetAddress   address;            /**< Internet address of the peer */
 	public Pointer       data;               /**< Application private data, may be freely modified */
-	public ENetPeerState state;
+	public int           state;
 	public Pointer       channels;
 	public NativeLong    channelCount;       /**< Number of channels allocated for communication with peer */
 	public int           incomingBandwidth;  /**< Downstream bandwidth of the client in bytes/second */
@@ -62,7 +62,7 @@ public class ENetPeer extends Structure<ENetPeer, ENetPeer.ByValue, ENetPeer.ByR
 	public int           needsDispatch;
 	public short         incomingUnsequencedGroup;
 	public short         outgoingUnsequencedGroup;
-	public Pointer       unsequencedWindow; 
+	public int[]         unsequencedWindow = new int[1024/32]; 
 	public int           eventData;
 	
 	public ENetPeer() {
