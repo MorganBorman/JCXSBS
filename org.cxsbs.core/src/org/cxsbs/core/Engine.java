@@ -23,6 +23,7 @@ public class Engine extends Thread {
 	 * @param args
 	 */
 	public void run() {
+		/*
 		if(NativeEnetLibrary.enet_initialize() != 0) {
 			System.out.println("Error initializing enet.");
 			return;
@@ -98,6 +99,8 @@ public class Engine extends Thread {
 		finally {
 			NativeEnetLibrary.enet_deinitialize();
 		}
+		*/
+		System.out.println("Hello there.");
 	}
 	
 	public void shutdown() {

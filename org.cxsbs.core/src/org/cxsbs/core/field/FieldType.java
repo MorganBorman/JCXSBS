@@ -1,0 +1,19 @@
+package org.cxsbs.core.field;
+
+public enum FieldType {
+	CHAR,
+	UCHAR,
+	INT,
+	UINT,
+	LONG,
+	ULONG,
+	FLOAT,
+	STRING,
+	VECTOR,
+	CLIENTPOSITION,
+	CLIENTSTATE,
+	AMMOLIST,
+	HIT,
+	ITERATEDFIELDS,
+	TERMINATEDFIELDS;
+}
