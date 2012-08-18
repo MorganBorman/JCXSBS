@@ -3,19 +3,19 @@ package org.cxsbs.core;
 import java.nio.ByteBuffer;
 import java.util.List;
 
+import nativeenet.Dummy;
 import nativeenet.ENetAddress;
 import nativeenet.ENetEvent;
 import nativeenet.ENetEventType;
 import nativeenet.ENetHost;
 import nativeenet.ENetPacket;
 import nativeenet.ENetPacketFlag;
-import nativeenet.ENetPeer;
 import nativeenet.NativeEnetLibrary;
 
 import org.cxsbs.core.field.StringFieldValue;
-import org.cxsbs.core.message.MessageType;
 import org.cxsbs.core.message.IMessage;
 import org.cxsbs.core.message.MessageContext;
+import org.cxsbs.core.message.MessageType;
 
 public class Engine extends Thread {
 	private boolean encounteredError = false;
@@ -34,7 +34,7 @@ public class Engine extends Thread {
 			ENetAddress address = new ENetAddress();
 			NativeEnetLibrary.enet_address_set_host(address, "localhost");
 			address.port = 28785;
-			
+
 			ENetHost host = NativeEnetLibrary.enet_host_create(address, 3, 3, 0, 0);
 			
 			ENetEvent event = new ENetEvent();
@@ -66,7 +66,7 @@ public class Engine extends Thread {
 						long datalen = buffer.position();
 						buffer.rewind();
 						
-						ENetPacket packet = NativeEnetLibrary.enet_packet_create(buffer, datalen, ENetPacketFlag.ENET_PACKET_FLAG_RELIABLE.ordinal());
+						ENetPacket packet = NativeEnetLibrary.enet_packet_create(buffer, datalen, ENetPacketFlag.RELIABLE.ordinal());
 						
 						NativeEnetLibrary.enet_peer_send(event.peer, (byte)1, packet);
 						
