@@ -12,6 +12,11 @@ import nativeenet.ENetPacketFlag;
 import nativeenet.ENetPeer;
 import nativeenet.NativeEnetLibrary;
 
+import org.cxsbs.core.field.StringFieldValue;
+import org.cxsbs.core.message.MessageType;
+import org.cxsbs.core.message.IMessage;
+import org.cxsbs.core.message.MessageContext;
+
 import com.sun.jna.NativeLong;
 
 public class Engine extends Thread {
@@ -23,7 +28,6 @@ public class Engine extends Thread {
 	 * @param args
 	 */
 	public void run() {
-		/*
 		if(NativeEnetLibrary.enet_initialize() != 0) {
 			System.out.println("Error initializing enet.");
 			return;
@@ -33,7 +37,7 @@ public class Engine extends Thread {
 			NativeEnetLibrary.enet_address_set_host(address, "localhost");
 			address.port = 28785;
 			
-			ENetHost host = NativeEnetLibrary.enet_host_create(address, new NativeLong(3), new NativeLong(3), 0, 0);
+			ENetHost host = NativeEnetLibrary.enet_host_create(address, 3, 3, 0, 0);
 			
 			ENetEvent event = new ENetEvent();
 			
@@ -99,8 +103,6 @@ public class Engine extends Thread {
 		finally {
 			NativeEnetLibrary.enet_deinitialize();
 		}
-		*/
-		System.out.println("Hello there.");
 	}
 	
 	public void shutdown() {
