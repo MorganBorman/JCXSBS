@@ -17,8 +17,6 @@ import org.cxsbs.core.message.MessageType;
 import org.cxsbs.core.message.IMessage;
 import org.cxsbs.core.message.MessageContext;
 
-import com.sun.jna.NativeLong;
-
 public class Engine extends Thread {
 	private boolean encounteredError = false;
 	private volatile boolean stayAlive = true;
@@ -68,7 +66,7 @@ public class Engine extends Thread {
 						long datalen = buffer.position();
 						buffer.rewind();
 						
-						ENetPacket packet = NativeEnetLibrary.enet_packet_create(buffer, new NativeLong(datalen), ENetPacketFlag.ENET_PACKET_FLAG_RELIABLE.ordinal());
+						ENetPacket packet = NativeEnetLibrary.enet_packet_create(buffer, datalen, ENetPacketFlag.ENET_PACKET_FLAG_RELIABLE.ordinal());
 						
 						NativeEnetLibrary.enet_peer_send(event.peer, (byte)1, packet);
 						
