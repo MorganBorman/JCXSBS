@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: JCXSBS
-Bundle-SymbolicName: JCXSBS;singleton:=true
+Bundle-Name: org.cxsbs.core
+Bundle-SymbolicName: org.cxsbs.core;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .
 Export-Package: org.cxsbs.core
-Bundle-NativeCode: libenet.so; osname=Linux; processor=x86
 Require-Bundle: org.eclipse.osgi;bundle-version="3.8.0",
- org.eclipse.core.runtime;bundle-version="3.8.0"
+ org.eclipse.core.runtime;bundle-version="3.8.0",
+ nativeenet;bundle-version="1.0.0"

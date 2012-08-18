@@ -3,7 +3,6 @@ package org.cxsbs.core;
 import java.nio.ByteBuffer;
 import java.util.List;
 
-import nativeenet.Dummy;
 import nativeenet.ENetAddress;
 import nativeenet.ENetEvent;
 import nativeenet.ENetEventType;
