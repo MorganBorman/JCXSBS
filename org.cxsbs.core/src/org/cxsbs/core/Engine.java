@@ -71,7 +71,7 @@ public class Engine extends Thread {
 						NativeEnetLibrary.enet_peer_send(event.peer, (byte)1, packet);
 						
 					} else if (event.type == ENetEventType.RECEIVE.ordinal()) {
-						buffer = event.packet.data.getByteBuffer(0, event.packet.dataLength);
+						buffer = event.packet.GetByteBuffer();
 						
 						if (event.channelID == 1) {
 							while(buffer.position() < buffer.limit()) {

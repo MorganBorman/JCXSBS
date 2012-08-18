@@ -1,5 +1,7 @@
 package nativeenet;
 
+import java.nio.ByteBuffer;
+
 import com.ochafik.lang.jnaerator.runtime.Structure;
 import com.sun.jna.Pointer;
 
@@ -22,4 +24,8 @@ public class ENetPacket extends Structure<ENetPacket, ENetPacket.ByValue, ENetPa
 	}
 	public static class ByReference extends ENetPacket implements Structure.ByReference {};
 	public static class ByValue extends ENetPacket implements Structure.ByValue {};
+	
+	public ByteBuffer GetByteBuffer() {
+		return this.data.getByteBuffer(0, this.dataLength);
+	}
 }
