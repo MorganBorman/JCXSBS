@@ -2,16 +2,14 @@ package nativeenet;
 
 import java.nio.ByteBuffer;
 
-import com.ochafik.lang.jnaerator.runtime.LibraryExtractor;
-import com.ochafik.lang.jnaerator.runtime.MangledFunctionMapper;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.NativeLibrary;
 import com.sun.jna.NativeLong;
 
 public class NativeEnetLibrary implements Library {
-	public static final String JNA_LIBRARY_NAME = LibraryExtractor.getLibraryPath("enet", true, NativeEnetLibrary.class);
-	public static final NativeLibrary JNA_NATIVE_LIB = NativeLibrary.getInstance(NativeEnetLibrary.JNA_LIBRARY_NAME, MangledFunctionMapper.DEFAULT_OPTIONS);
+	public static final String JNA_LIBRARY_NAME = "enet";
+	public static final NativeLibrary JNA_NATIVE_LIB = NativeLibrary.getInstance(NativeEnetLibrary.JNA_LIBRARY_NAME);
 	static {
 		Native.register(NativeEnetLibrary.JNA_LIBRARY_NAME);
 	}

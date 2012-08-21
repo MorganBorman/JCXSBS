@@ -1,10 +1,11 @@
 package nativeenet;
 
-import com.ochafik.lang.jnaerator.runtime.Structure;
+import com.sun.jna.Structure;
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
+import com.sun.jna.ptr.IntByReference;
 
-public class ENetPeer extends Structure<ENetPeer, ENetPeer.ByValue, ENetPeer.ByReference > {
+public class ENetPeer extends Structure {
 	public Pointer       dispatchList;
 	public ENetHost      host;
 	public short         outgoingPeerID;
@@ -13,7 +14,7 @@ public class ENetPeer extends Structure<ENetPeer, ENetPeer.ByValue, ENetPeer.ByR
 	public byte          outgoingSessionID;
 	public byte          incomingSessionID;
 	public ENetAddress   address;            /**< Internet address of the peer */
-	public Pointer       data;               /**< Application private data, may be freely modified */
+	public NativeLong    data;               /**< Application private data, may be freely modified */
 	public int           state;
 	public Pointer       channels;
 	public NativeLong    channelCount;       /**< Number of channels allocated for communication with peer */
@@ -67,14 +68,20 @@ public class ENetPeer extends Structure<ENetPeer, ENetPeer.ByValue, ENetPeer.ByR
 	
 	public ENetPeer() {
 		super();
+		data = new NativeLong(-1);
+	}
+	
+	public void setData(int i) {
+		data = new NativeLong(i);
+	}
+	
+	public int getData() {
+		return data.intValue();
 	}
 	
 	protected ByReference newByReference() { return new ByReference(); }
 	protected ByValue newByValue() { return new ByValue(); }
 	protected ENetPeer newInstance() { return new ENetPeer(); }
-	public static ENetPeer[] newArray(int arrayLength) {
-		return Structure.newArray(ENetPeer.class, arrayLength);
-	}
 	public static class ByReference extends ENetPeer implements Structure.ByReference {};
 	public static class ByValue extends ENetPeer implements Structure.ByValue {};
 }

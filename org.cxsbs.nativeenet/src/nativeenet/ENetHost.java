@@ -1,10 +1,10 @@
 package nativeenet;
 
-import com.ochafik.lang.jnaerator.runtime.Structure;
+import com.sun.jna.Structure;
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
 
-public class ENetHost extends Structure<ENetHost, ENetHost.ByValue, ENetHost.ByReference > {
+public class ENetHost extends Structure {
 	public Pointer              socket;
 	public ENetAddress          address;                     /**< Internet address of the host */
 	public int                  incomingBandwidth;           /**< downstream bandwidth of the host */
@@ -43,9 +43,6 @@ public class ENetHost extends Structure<ENetHost, ENetHost.ByValue, ENetHost.ByR
 	protected ByReference newByReference() { return new ByReference(); }
 	protected ByValue newByValue() { return new ByValue(); }
 	protected ENetHost newInstance() { return new ENetHost(); }
-	public static ENetHost[] newArray(int arrayLength) {
-		return Structure.newArray(ENetHost.class, arrayLength);
-	}
 	public static class ByReference extends ENetHost implements Structure.ByReference {};
 	public static class ByValue extends ENetHost implements Structure.ByValue {};
 }

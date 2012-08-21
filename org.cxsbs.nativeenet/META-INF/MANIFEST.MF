@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Native Evet
+Bundle-Name: Native ENet
 Bundle-SymbolicName: org.cxsbs.nativeenet;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
@@ -8,5 +8,5 @@ Export-Package: com.sun.jna,
  com.sun.jna.ptr,
  nativeenet
 Bundle-ClassPath: .,
- libs/jnaerator-0.11-SNAPSHOT-20120718.jar,
- libs/platform.jar
+ libs/platform.jar,
+ libs/jna.jar

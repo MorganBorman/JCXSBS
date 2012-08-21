@@ -1,30 +1,37 @@
 package org.cxsbs.core;
 
 import java.nio.ByteBuffer;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import nativeenet.ENetAddress;
 import nativeenet.ENetEvent;
 import nativeenet.ENetEventType;
 import nativeenet.ENetHost;
-import nativeenet.ENetPacket;
-import nativeenet.ENetPacketFlag;
 import nativeenet.NativeEnetLibrary;
 
 import org.cxsbs.core.field.StringFieldValue;
 import org.cxsbs.core.message.IMessage;
 import org.cxsbs.core.message.MessageContext;
 import org.cxsbs.core.message.MessageType;
+import org.cxsbs.core.message.MessageWriter;
 
 public class Engine extends Thread {
 	private boolean encounteredError = false;
 	private volatile boolean stayAlive = true;
-	private List<Integer> connectedClients;
+	private Map<Integer, IClient> connectedClients;
+	
+	static final int maxClients = 5;
+	
+	TemporaryIdentifierPool clientNumberPool;
 	
 	/**
 	 * @param args
 	 */
 	public void run() {
+		clientNumberPool = new TemporaryIdentifierPool(maxClients);
+		connectedClients = new HashMap<Integer, IClient>();
+		
 		if(NativeEnetLibrary.enet_initialize() != 0) {
 			System.out.println("Error initializing enet.");
 			return;
@@ -34,11 +41,11 @@ public class Engine extends Thread {
 			NativeEnetLibrary.enet_address_set_host(address, "localhost");
 			address.port = 28785;
 
-			ENetHost host = NativeEnetLibrary.enet_host_create(address, 3, 3, 0, 0);
+			ENetHost host = NativeEnetLibrary.enet_host_create(address, maxClients, 3, 0, 0);
 			
 			ENetEvent event = new ENetEvent();
 			
-			while(true) {
+			while(stayAlive) {
 				boolean serviced = false;
 				while(!serviced)
 				{
@@ -48,49 +55,58 @@ public class Engine extends Thread {
 						serviced = true;
 					}
 					
+					int cn;
+					IClient client;
 					ByteBuffer buffer;
 					
 					if(event.type == ENetEventType.CONNECT.ordinal()) {
-						System.out.println("client connected.");
-						
-						buffer = ByteBuffer.allocate(100);
-						
-						CubeByteBuffer.putint(buffer, 1); //N_SERVINFO = 1
-						CubeByteBuffer.putint(buffer, 0);
-						CubeByteBuffer.putint(buffer, 258); //PROTOCOL_VERSION = 258
-						CubeByteBuffer.putint(buffer, 0);
-						CubeByteBuffer.putint(buffer, 0);
-						CubeByteBuffer.putstring(buffer, "Java CXSBS Test Server");
-						
-						long datalen = buffer.position();
-						buffer.rewind();
-						
-						ENetPacket packet = NativeEnetLibrary.enet_packet_create(buffer, datalen, ENetPacketFlag.RELIABLE.ordinal());
-						
-						NativeEnetLibrary.enet_peer_send(event.peer, (byte)1, packet);
+						try {
+							cn = clientNumberPool.get();
+							client = new Client(cn, event.peer);
+							event.peer.setData(cn);
+							connectedClients.put(cn, client);
+							System.out.println("client connected: " + cn);
+							
+							buffer = ByteBuffer.allocate(100);
+							MessageWriter.PutServerInfo(buffer, client, false, "Java CXSBS Test Server");
+							client.send(1, buffer, true);
+							
+						} catch (PoolEmptyException e) {
+							NativeEnetLibrary.enet_peer_disconnect(event.peer, 7); // DISC_MAXCLIENTS = 7
+						}
 						
 					} else if (event.type == ENetEventType.RECEIVE.ordinal()) {
-						buffer = event.packet.GetByteBuffer();
-						
-						if (event.channelID == 1) {
-							while(buffer.position() < buffer.limit()) {
-								IMessage message = MessageType.parseMessage(buffer, MessageContext.CTS);
-								
-								if(message.getMessageType() == MessageType.CONNECT) {
-									System.out.println("clientid: CONNECT");
-									StringFieldValue sfv = (StringFieldValue)message.getField("name");
-									System.out.println("\tname: " + sfv.value);
-								} else if(message.getMessageType() == MessageType.PING) {
+						cn = event.peer.getData();
+						client = connectedClients.get(cn);
+						if (client != null) {
+							buffer = event.packet.GetByteBuffer();
+							
+							System.out.println("data received: " + cn + " buffer size: " + buffer.capacity());
+							
+							if (event.channelID == 1) {
+								while(buffer.position() < buffer.limit()) {
+									IMessage message = MessageType.parseMessage(buffer, MessageContext.CTS);
 									
-								} else {
-									System.out.println("message: " + message.getMessageType().toString());
+									if(message.getMessageType() == MessageType.CONNECT) {
+										System.out.println("clientid: CONNECT");
+										StringFieldValue sfv = (StringFieldValue)message.getField("name");
+										System.out.println("\tname: " + sfv.value);
+									} else if(message.getMessageType() == MessageType.PING) {
+										
+									} else {
+										System.out.println("message: " + message.getMessageType().toString());
+									}
 								}
 							}
 						}
 					} else if (event.type == ENetEventType.DISCONNECT.ordinal()) {
-						System.out.println("client disconnected.");
-						
-						//connectedClients.remove(new Integer(event.clientid));
+						cn = event.peer.getData();
+						client = connectedClients.get(cn);
+						if (client != null) {
+							connectedClients.remove(new Integer(cn));
+							
+							System.out.println("client disconnected: " + client.getCn());
+						}
 					} else {
 						
 					}

@@ -51,6 +51,14 @@ public class CubeByteBuffer {
 		}
 	}
 	
+	public static void putbool(ByteBuffer buffer, boolean b) {
+		putint(buffer, b ? 1 : 0);
+	}
+	
+	public static boolean getbool(ByteBuffer buffer, boolean peek) {
+		return getint(buffer, peek) == 1 ? true : false;
+	}
+	
 	public static void putuint(ByteBuffer buffer, long i) {
 		assert(i >= 0);
 		if(i < 0 || i >= (1<<21)) {
